@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+        android:id="@+id/termrecyclerview"
         android:layout_width="409dp"
         android:layout_height="657dp"
         android:layout_margin="5dp"

@@ -1,6 +1,7 @@
 package com.example.schedulerapp.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -15,20 +16,26 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class TermList extends AppCompatActivity {
-
+    private Repository repository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_list);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        Repository repo= new Repository((getApplication()));
-        List<Term> terms= repo.getAllTerms();
-        TermAdapter adapter =new TermAdapter(getApplicationContext());
-        adapter.setTerms(terms);
-
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        RecyclerView recyclerView = findViewById(R.id.termrecyclerview);
+        final TermAdapter termAdapter = new TermAdapter(this);
+        recyclerView.setAdapter(termAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        repository = new Repository((getApplication()));
+        List<Term> allTerms= repository.getAllTerms();
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        termAdapter.setTerms(allTerms);
+
+        //TermAdapter adapter =new TermAdapter(getApplicationContext());
+       // adapter.setTerms(terms);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,4 +44,18 @@ public class TermList extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        List<Term> allProducts=repository.getAllTerms();
+        RecyclerView recyclerView=findViewById(R.id.termrecyclerview);
+        final TermAdapter termAdapter=new TermAdapter(this);
+        recyclerView.setAdapter(termAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        termAdapter.setTerms(allProducts);
+
+        //Toast.makeText(TermDetails.this,"refresh list",Toast.LENGTH_LONG).show();
+    }
+
 }
