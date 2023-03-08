@@ -13,7 +13,7 @@ import com.example.schedulerapp.entities.Assessment;
 import com.example.schedulerapp.entities.Course;
 import com.example.schedulerapp.entities.Term;
 
-@Database(entities = {Assessment.class, Course.class, Term.class}, version = 1, exportSchema = false)
+@Database(entities = {Assessment.class, Course.class, Term.class}, version = 4, exportSchema = false)
 public abstract class StudentDatabaseBuilder extends RoomDatabase {
     public abstract AssessmentDAO assessmentDAO();
 

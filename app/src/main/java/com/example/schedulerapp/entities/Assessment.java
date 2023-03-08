@@ -9,16 +9,27 @@ public class Assessment {
     private int assessmentID;
     private String assessmentName;
     private String endDate;
+    private String type;
     private int courseID;
 
-    public Assessment(int assessmentID, String assessmentName, String endDate, int courseID) {
+
+    public Assessment(int assessmentID, String assessmentName, String endDate, String type, int courseID) {
         this.assessmentID = assessmentID;
         this.assessmentName = assessmentName;
         this.endDate = endDate;
+        this.type = type;
         this.courseID = courseID;
     }
 
     public Assessment() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getCourseID() {

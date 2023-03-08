@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textViewcoursestartdate"
+        android:id="@+id/textViewassessmentstartdate"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="73dp"
@@ -17,16 +17,16 @@
         app:layout_constraintLeft_toRightOf="parent"/>
 
     <TextView
-        android:id="@+id/textViewcourseenddate"
+        android:id="@+id/textViewassessmentenddate"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="73dp"
         tools:layout_editor_absoluteY="112dp"
-        app:layout_constraintLeft_toRightOf="@id/textViewcoursestartdate"
+        app:layout_constraintLeft_toRightOf="@id/textViewassessmentstartdate"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewcoursename"
+        android:id="@+id/textViewassessmentname"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="73dp"

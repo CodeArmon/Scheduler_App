@@ -6,12 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textviewtermname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:background="@color/purple_200"
-        android:text="TextView"
         tools:layout_editor_absoluteX="137dp"
         tools:layout_editor_absoluteY="124dp"
         app:layout_constraintTop_toTopOf="parent"

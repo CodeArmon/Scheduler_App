@@ -14,8 +14,9 @@ public class Course {
     private String teacherName;
     private String phoneNumber;
     private String email;
+    private String note;
 
-    public Course(int courseID, int termID, String courseName, String startDate, String endDate, String teacherName, String phoneNumber, String email) {
+    public Course(int courseID, int termID, String courseName, String startDate, String endDate, String teacherName, String phoneNumber, String email, String note) {
         this.courseID = courseID;
         this.termID = termID;
         this.courseName = courseName;
@@ -24,9 +25,33 @@ public class Course {
         this.teacherName = teacherName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.note=note;
     }
 
     public Course() {
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseID=" + courseID +
+                ", termID=" + termID +
+                ", courseName='" + courseName + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", note='" + note + '\'' +
+                '}';
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public int getTermID() {

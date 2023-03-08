@@ -33,7 +33,7 @@
                     android:id="@+id/termname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Term 1" />
+                    android:hint="Term Name" />
 
             </LinearLayout>
 
@@ -101,9 +101,9 @@
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/coursesrecyclerview"
         app:layout_constraintTop_toBottomOf="@id/scrollView"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/coursesrecyclerview"
         android:layout_width="186dp"
         android:layout_height="536dp"
         tools:layout_editor_absoluteX="33dp"

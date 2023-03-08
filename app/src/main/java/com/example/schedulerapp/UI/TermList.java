@@ -33,7 +33,7 @@ public class TermList extends AppCompatActivity {
         termAdapter.setTerms(allTerms);
 
         //TermAdapter adapter =new TermAdapter(getApplicationContext());
-       // adapter.setTerms(terms);
+      // adapter.setTerms(allTerms);
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,12 +48,12 @@ public class TermList extends AppCompatActivity {
     protected void onResume() {
 
         super.onResume();
-        List<Term> allProducts=repository.getAllTerms();
+        List<Term> allTerms=repository.getAllTerms();
         RecyclerView recyclerView=findViewById(R.id.termrecyclerview);
         final TermAdapter termAdapter=new TermAdapter(this);
         recyclerView.setAdapter(termAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        termAdapter.setTerms(allProducts);
+        termAdapter.setTerms(allTerms);
 
         //Toast.makeText(TermDetails.this,"refresh list",Toast.LENGTH_LONG).show();
     }

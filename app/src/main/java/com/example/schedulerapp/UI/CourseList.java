@@ -1,20 +1,35 @@
 package com.example.schedulerapp.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.schedulerapp.Database.Repository;
 import com.example.schedulerapp.R;
+import com.example.schedulerapp.entities.Course;
+import com.example.schedulerapp.entities.Term;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class CourseList extends AppCompatActivity {
+import java.util.List;
 
+public class CourseList extends AppCompatActivity {
+    private Repository repository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
+        RecyclerView recyclerView = findViewById(R.id.coursesrecyclerview);
+        final CourseAdapter courseAdapter = new CourseAdapter(this);
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        repository = new Repository((getApplication()));
+        List<Course> allCourses= repository.getAllCourses();
+        courseAdapter.setCourses(allCourses);
+
         FloatingActionButton fab = findViewById(R.id.floatingActionButton3);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -43,11 +43,13 @@ public class HomeScreen extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.addSampleData:
                 Term term= new Term(0,"Spring", "12-14-2002","12-15-2022");
+                Term term1= new Term(0,"Spring Next", "12-14-2023","12-15-2024");
                 Repository repository = new Repository(getApplication());
                 repository.insert(term);
-                Assessment assessment= new Assessment(0,"Performance","12-20-2022",2);
+                repository.insert(term1);
+                Assessment assessment= new Assessment(0,"Performance","12-20-2022","Performance",1);
                 repository.insert(assessment);
-                Course course=new Course(1, 2, "Science","12-17-2022","02-10-2023","Professor Xavier","404-555-0912","profx@school.edu");
+                Course course=new Course(0, 2, "Art","12-17-2022","02-10-2023","Professor Xavier","404-555-0912","profx@school.edu","optional");
                 repository.insert(course);
                 return true;
         }
