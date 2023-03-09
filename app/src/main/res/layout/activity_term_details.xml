@@ -51,6 +51,7 @@
                     android:id="@+id/startdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
                     android:hint="02-01-2023" />
             </LinearLayout>
 
@@ -68,6 +69,7 @@
                     android:id="@+id/enddate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
                     android:hint="02-28-2023" />
             </LinearLayout>
 

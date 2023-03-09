@@ -18,6 +18,8 @@ import com.example.schedulerapp.entities.Term;
 
 public class HomeScreen extends AppCompatActivity {
 
+    public static int alertNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +51,8 @@ public class HomeScreen extends AppCompatActivity {
                 repository.insert(term1);
                 Assessment assessment= new Assessment(0,"Performance","12-20-2022","Performance",1);
                 repository.insert(assessment);
-                Course course=new Course(0, 2, "Art","12-17-2022","02-10-2023","Professor Xavier","404-555-0912","profx@school.edu","optional");
-                repository.insert(course);
+                Course course1=new Course(0, 2, "Mobile","03-09-2023","03-10-2023","Professor Xavier","404-555-0912","profx@school.edu","optional");
+                repository.insert(course1);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.CourseDetails">
+    tools:context=".UI.AssessmentDetails">
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,10 +27,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Name" />
+                    android:text="Assessment Name" />
 
                 <EditText
-                    android:id="@+id/coursename"
+                    android:id="@+id/assessmentname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="History" />
@@ -77,81 +77,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <TextView
+                <RadioGroup
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Status" />
+                    android:layout_height="55dp"
+                    android:weightSum="1"
+                    android:id="@+id/radioGroup"
+                    android:orientation="horizontal"
+                    >
 
-                <EditText
-                    android:id="@+id/coursestatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="In Progress" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:text="Performance"
+                        android:id="@+id/radioButton"
+                        android:checked="true"
+                        />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Instructor" />
-
-                <EditText
-                    android:id="@+id/courseinstructor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Professor X" />
-            </LinearLayout>
-            <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Instructor Phone" />
-
-            <EditText
-                android:id="@+id/instructphone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="x6988" />
-        </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Instructor Email" />
-
-                <EditText
-                    android:id="@+id/instructemail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="professor@wgu.edu" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Note" />
-
-                <EditText
-                    android:id="@+id/coursenote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Course Note" />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Objective"
+                        android:id="@+id/radioButton2"
+                        android:checked="false"
+                        android:layout_weight="0.15" />
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -161,18 +110,17 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/courseSaveButton"
+                    android:id="@+id/assessmentSaveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Save"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
         </LinearLayout>
 
 
     </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton3"
+        android:id="@+id/floatingActionButton4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -183,24 +131,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:background="@android:color/background_dark"
-        android:id="@+id/view"
-        android:layout_marginTop="25dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView1"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintTop_toBottomOf="@id/scrollView1"
+        app:layout_constraintTop_toBottomOf="@id/scrollView2"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/assessmentrecyclerview"
         android:layout_width="186dp"
         android:layout_height="536dp"
-        android:layout_marginTop="58dp"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="194dp" />
 
