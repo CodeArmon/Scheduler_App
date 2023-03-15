@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,15 +33,17 @@ public class TermDetails extends AppCompatActivity {
     EditText editName;
     EditText editStartDate;
     EditText editEndDate;
-    DatePickerDialog.OnDateSetListener startDate;
-    DatePickerDialog.OnDateSetListener endDate;
+    DatePickerDialog.OnDateSetListener startDatePick;
+   DatePickerDialog.OnDateSetListener endDatePick;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
     String name;
-    //String startDate;
-    //String endDate;
+    String startDate;
+    String endDate;
     int id;
+    int numCourses;
     Term term;
+    Term currentTerm;
     Repository repository;
 
     @Override
@@ -50,13 +54,13 @@ public class TermDetails extends AppCompatActivity {
         editStartDate = findViewById(R.id.startdate);
         editEndDate = findViewById(R.id.enddate);
         name = getIntent().getStringExtra("name");
-        // startDate = getIntent().getStringExtra("start date");
-        //endDate = getIntent().getStringExtra("end date");
+        startDate = getIntent().getStringExtra("start date");
+        endDate = getIntent().getStringExtra("end date");
         editName.setText(name);
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        editStartDate.setText(sdf.format(new Date()));
-        editEndDate.setText(sdf.format(new Date()));
+        editStartDate.setText(startDate);
+        editEndDate.setText(endDate);
         id = getIntent().getIntExtra("id", -1);
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.coursesrecyclerview);
@@ -75,11 +79,11 @@ public class TermDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (id == -1) {
-                    term = new Term(0, editName.getText().toString(), editStartDate.toString(), editEndDate.toString());
+                    term = new Term(0, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
                     repository.insert(term);
 
                 } else {
-                    term = new Term(id, editName.getText().toString(), editStartDate.toString(), editEndDate.toString());
+                    term = new Term(id, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
                     repository.update(term);
 
                 }
@@ -100,12 +104,12 @@ public class TermDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(TermDetails.this, startDate, myCalendarStart
+                new DatePickerDialog(TermDetails.this, startDatePick, myCalendarStart
                         .get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        startDate = new DatePickerDialog.OnDateSetListener() {
+        startDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -131,12 +135,12 @@ public class TermDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(TermDetails.this, endDate, myCalendarEnd
+                new DatePickerDialog(TermDetails.this, endDatePick, myCalendarEnd
                         .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
                         myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        endDate = new DatePickerDialog.OnDateSetListener() {
+        endDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -175,7 +179,7 @@ public class TermDetails extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-
+        repository = new Repository(getApplication());
         super.onResume();
         RecyclerView recyclerView = findViewById(R.id.coursesrecyclerview);
         final CourseAdapter courseAdapter = new CourseAdapter(this);
@@ -189,5 +193,32 @@ public class TermDetails extends AppCompatActivity {
         courseAdapter.setCourses(filteredCourses);
 
         //Toast.makeText(TermDetails.this,"refresh list",Toast.LENGTH_LONG).show();
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.deleteterm, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.deleteterm:
+                for (Term term : repository.getAllTerms()) {
+                    if (term.getTermID() == id) currentTerm = term;
+                }
+
+                numCourses = 0;
+                for (Course course : repository.getAllCourses()) {
+                    if (course.getTermID() == id) ++numCourses;
+                }
+
+                if (numCourses == 0) {
+                    repository.delete(currentTerm);
+                    Toast.makeText(TermDetails.this, currentTerm.getTermName() + " was deleted", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(TermDetails.this, "Can't delete a Term with Courses", Toast.LENGTH_LONG).show();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

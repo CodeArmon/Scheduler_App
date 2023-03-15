@@ -25,6 +25,16 @@ public class Term {
     public Term() {
     }
 
+    @Override
+    public String toString() {
+        return "Term{" +
+                "termID=" + termID +
+                ", termName='" + termName + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                '}';
+    }
+
     public int getTermID() {
         return termID;
     }

@@ -37,12 +37,13 @@ public class AssessmentDetails extends AppCompatActivity {
     EditText editName;
     EditText editEndDate;
     EditText editStartDate;
-    DatePickerDialog.OnDateSetListener endDate;
-    DatePickerDialog.OnDateSetListener startDate;
+    DatePickerDialog.OnDateSetListener endDatePick;
+    DatePickerDialog.OnDateSetListener startDatePick;
     final Calendar myCalendarEnd = Calendar.getInstance();
     final Calendar myCalendarStart = Calendar.getInstance();
     String name;
-    //String endDate;
+    String startDate;
+    String endDate;
     String type;
     int id;
     Assessment assessment;
@@ -57,12 +58,12 @@ public class AssessmentDetails extends AppCompatActivity {
         editEndDate=findViewById(R.id.enddate);
         editStartDate=findViewById(R.id.startdate);
         name = getIntent().getStringExtra("name");
-       // endDate = getIntent().getStringExtra("end date");
+        endDate = getIntent().getStringExtra("end date");
         editName.setText(name);
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        editEndDate.setText(sdf.format(new Date()));
-        editStartDate.setText(sdf.format(new Date()));
+        editEndDate.setText(sdf.format(startDate));
+        editStartDate.setText(sdf.format(endDate));
         id=getIntent().getIntExtra("id", -1);
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
 
@@ -72,9 +73,9 @@ public class AssessmentDetails extends AppCompatActivity {
 // find the radioButton by returned id
         radioButton = (RadioButton) findViewById(selectedId);
 // radioButton text
-         type = radioButton.getText().toString();
-        //rg = (RadioGroup) findViewById(R.id.radioGroup);
-        //type = ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
+         //type = radioButton.getTag().toString();
+        rg = (RadioGroup) findViewById(R.id.radioGroup);
+        type = ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
         final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
@@ -93,12 +94,13 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(id==-1){
-                    assessment= new Assessment(0,editName.getText().toString(),editEndDate.toString(), type, id);
+
+                    assessment= new Assessment(0,editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, id);
                     repository.insert(assessment);
 
                 }
                 else{
-                    assessment=new Assessment(id, editName.getText().toString(),editEndDate.toString(), type, id);
+                    assessment=new Assessment(id, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, id);
                     repository.update(assessment);
 
                 }
@@ -119,12 +121,12 @@ public class AssessmentDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(AssessmentDetails.this, endDate, myCalendarEnd
+                new DatePickerDialog(AssessmentDetails.this, endDatePick, myCalendarEnd
                         .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
                         myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        endDate = new DatePickerDialog.OnDateSetListener() {
+        endDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -150,12 +152,12 @@ public class AssessmentDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(AssessmentDetails.this, startDate, myCalendarStart
+                new DatePickerDialog(AssessmentDetails.this, startDatePick, myCalendarStart
                         .get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        startDate = new DatePickerDialog.OnDateSetListener() {
+        startDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -192,8 +194,8 @@ public class AssessmentDetails extends AppCompatActivity {
     }
     @Override
     protected void onResume() {
-
         super.onResume();
+        repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
         final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
         recyclerView.setAdapter(assessmentAdapter);
@@ -253,5 +255,6 @@ public class AssessmentDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
 

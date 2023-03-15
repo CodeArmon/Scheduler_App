@@ -10,14 +10,17 @@ import android.view.View;
 
 import com.example.schedulerapp.Database.Repository;
 import com.example.schedulerapp.R;
+import com.example.schedulerapp.entities.Assessment;
 import com.example.schedulerapp.entities.Course;
 import com.example.schedulerapp.entities.Term;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseList extends AppCompatActivity {
     private Repository repository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +30,7 @@ public class CourseList extends AppCompatActivity {
         recyclerView.setAdapter(courseAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         repository = new Repository((getApplication()));
-        List<Course> allCourses= repository.getAllCourses();
+        List<Course> allCourses = repository.getAllCourses();
         courseAdapter.setCourses(allCourses);
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton3);
@@ -38,5 +41,20 @@ public class CourseList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RecyclerView recyclerView = findViewById(R.id.coursesrecyclerview);
+        final CourseAdapter courseAdapter = new CourseAdapter(this);
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        repository = new Repository((getApplication()));
+        List<Course> allCourses = repository.getAllCourses();
+        courseAdapter.setCourses(allCourses);
+
+
+        //Toast.makeText(CourseDetails.this,"refresh list",Toast.LENGTH_LONG).show();
     }
 }

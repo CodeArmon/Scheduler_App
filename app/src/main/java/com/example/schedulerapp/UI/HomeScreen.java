@@ -49,9 +49,9 @@ public class HomeScreen extends AppCompatActivity {
                 Repository repository = new Repository(getApplication());
                 repository.insert(term);
                 repository.insert(term1);
-                Assessment assessment= new Assessment(0,"Performance","12-20-2022","Performance",1);
+                Assessment assessment= new Assessment(0,"Performance","03-14-2022","03-15-2022","Performance",1);
                 repository.insert(assessment);
-                Course course1=new Course(0, 2, "Mobile","03-09-2023","03-10-2023","Professor Xavier","404-555-0912","profx@school.edu","optional");
+                Course course1=new Course(0, 2, "Mobile","03-09-2023","03-10-2023","Completed","Professor Xavier","404-555-0912","profx@school.edu","optional");
                 repository.insert(course1);
                 return true;
         }

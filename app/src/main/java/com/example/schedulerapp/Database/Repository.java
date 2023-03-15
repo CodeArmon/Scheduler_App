@@ -45,6 +45,18 @@ public class Repository {
         return mAllTerms;
     }
 
+    public List<Course> getAllAssociatedCourses(int termID) {
+        databaseExecutor.execute(() -> {
+            mAllCourses = mCourseDAO.getAllAssociatedCourses(termID);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mAllCourses;
+    }
+
     public List<Course> getAllCourses() {
         databaseExecutor.execute(() -> {
             mAllCourses = mCourseDAO.getAllCourses();
@@ -60,6 +72,17 @@ public class Repository {
     public List<Assessment> getAllAssessments() {
         databaseExecutor.execute(() -> {
             mAllAssessments = mAssessmentDAO.getAllAssessments();
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mAllAssessments;
+    }
+    public List<Assessment> getAllAssociatedAssessments(int courseID) {
+        databaseExecutor.execute(() -> {
+            mAllAssessments = mAssessmentDAO.getAllAssociatedAssessments(courseID);
         });
         try {
             Thread.sleep(1000);

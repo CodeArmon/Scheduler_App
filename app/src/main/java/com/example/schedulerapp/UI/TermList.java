@@ -10,9 +10,11 @@ import android.view.View;
 
 import com.example.schedulerapp.Database.Repository;
 import com.example.schedulerapp.R;
+import com.example.schedulerapp.entities.Course;
 import com.example.schedulerapp.entities.Term;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TermList extends AppCompatActivity {

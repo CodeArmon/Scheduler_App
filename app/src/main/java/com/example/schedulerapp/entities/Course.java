@@ -11,24 +11,42 @@ public class Course {
     private String courseName;
     private String startDate;
     private String endDate;
-    private String teacherName;
-    private String phoneNumber;
+    private String status;
+    private String courseInstruct;
+    private String coursePhone;
     private String email;
     private String note;
 
-    public Course(int courseID, int termID, String courseName, String startDate, String endDate, String teacherName, String phoneNumber, String email, String note) {
+    public Course(int courseID, int termID, String courseName, String startDate, String endDate, String status, String courseInstruct, String coursePhone, String email, String note) {
         this.courseID = courseID;
         this.termID = termID;
         this.courseName = courseName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.teacherName = teacherName;
-        this.phoneNumber = phoneNumber;
+        this.status=status;
+        this.courseInstruct = courseInstruct;
+        this.coursePhone = coursePhone;
         this.email = email;
         this.note=note;
     }
 
     public Course() {
+    }
+
+    public void setCoursePhone(String coursePhone) {
+        this.coursePhone = coursePhone;
+    }
+
+    public String getCoursePhone() {
+        return coursePhone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -39,8 +57,9 @@ public class Course {
                 ", courseName='" + courseName + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
-                ", teacherName='" + teacherName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", status='" + status + '\'' +
+                ", teacherName='" + courseInstruct + '\'' +
+                ", phoneNumber='" + coursePhone + '\'' +
                 ", email='" + email + '\'' +
                 ", note='" + note + '\'' +
                 '}';
@@ -94,20 +113,20 @@ public class Course {
         this.endDate = endDate;
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public String getCourseInstruct() {
+        return courseInstruct;
     }
 
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
+    public void setCourseInstruct(String courseInstruct) {
+        this.courseInstruct = courseInstruct;
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return coursePhone;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.coursePhone = phoneNumber;
     }
 
     public String getEmail() {

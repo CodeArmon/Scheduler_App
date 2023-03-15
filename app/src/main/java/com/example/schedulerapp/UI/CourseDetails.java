@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -13,9 +14,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.schedulerapp.Database.Repository;
 import com.example.schedulerapp.R;
@@ -32,29 +36,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CourseDetails extends AppCompatActivity {
+public class CourseDetails extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText editCourseName;
     EditText editStartDate;
     EditText editEndDate;
-    EditText editStatus;
+    Spinner editStatus;
     EditText editCourseInstruct;
     EditText editInstructPhone;
     EditText editInstructEmail;
     EditText editNote;
-    DatePickerDialog.OnDateSetListener startDate;
-    DatePickerDialog.OnDateSetListener endDate;
+    Spinner courseSpinner;
+    DatePickerDialog.OnDateSetListener startDatePick;
+    DatePickerDialog.OnDateSetListener endDatePick;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
     String name;
-    //String startDate;
-   // String endDate;
+    String startDate;
+    String endDate;
     String status;
     String courseInstruct;
     String instructPhone;
     String instructEmail;
     String note;
+    String email;
     int id;
     int termId;
+    int courseID;
     Term term;
     Course course;
     Repository repository;
@@ -69,23 +76,38 @@ public class CourseDetails extends AppCompatActivity {
         editCourseName=findViewById(R.id.coursename);
         editStartDate=findViewById(R.id.startdate);
         editEndDate=findViewById(R.id.enddate);
-        editStatus=findViewById(R.id.coursestatus);
+        editStatus=findViewById(R.id.statusSpinner);
         editCourseInstruct=findViewById(R.id.courseinstructor);
         editInstructPhone=findViewById(R.id.instructphone);
         editInstructEmail=findViewById(R.id.instructemail);
         editNote=findViewById(R.id.coursenote);
+        courseSpinner=findViewById(R.id.statusSpinner);
         name = getIntent().getStringExtra("name");
-        //startDate = getIntent().getStringExtra("start date");
-        //endDate = getIntent().getStringExtra("end date");
+        startDate = getIntent().getStringExtra("start date");
+        endDate = getIntent().getStringExtra("end date");
         status = getIntent().getStringExtra("status");
-        termId = getIntent().getIntExtra("termID", -1);
+        courseInstruct = getIntent().getStringExtra("course instructor");
+        instructPhone = getIntent().getStringExtra("course phone");
+        courseID = getIntent().getIntExtra("courseID", -1);
+        email = getIntent().getStringExtra("email");
         note = getIntent().getStringExtra("note");
         editCourseName.setText(name);
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        editStartDate.setText(sdf.format(new Date()));
-        editEndDate.setText(sdf.format(new Date()));
-        editStatus.setText(status);
+        editStartDate.setText(startDate);
+        editEndDate.setText(endDate);
+        //Spinner spinner = (Spinner) findViewById(R.id.statusSpinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.statusChoices, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        courseSpinner.setAdapter(adapter);
+        status=courseSpinner.getSelectedItem().toString();
+
+
+        //editStatus.setText(status);
         editCourseInstruct.setText(courseInstruct);
         editInstructEmail.setText(instructEmail);
         editInstructPhone.setText(instructPhone);
@@ -108,12 +130,12 @@ public class CourseDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(id==-1){
-                   course = new Course(0, termId, editCourseName.getText().toString(),editStartDate.toString(), editEndDate.toString(), editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(), editInstructPhone.getText().toString(),editNote.getText().toString() );
+                   course = new Course(0, termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(), editInstructEmail.getText().toString(),editNote.getText().toString() );
                     repository.insert(course);
 
                 }
                 else{
-                    course=new Course(course.getCourseID(),termId, editCourseName.getText().toString(),editStartDate.toString(), editEndDate.toString(), editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(), editInstructPhone.getText().toString(),editNote.getText().toString());
+                    course=new Course(course.getCourseID(),termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(),editInstructEmail.getText().toString(),editNote.getText().toString());
                     repository.update(course);
 
                 }
@@ -134,7 +156,7 @@ public class CourseDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(CourseDetails.this, startDate, myCalendarStart
+                new DatePickerDialog(CourseDetails.this, startDatePick, myCalendarStart
                         .get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
 
@@ -151,13 +173,13 @@ public class CourseDetails extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                new DatePickerDialog(CourseDetails.this, endDate, myCalendarEnd
+                new DatePickerDialog(CourseDetails.this, endDatePick, myCalendarEnd
                         .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
                         myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
-        startDate = new DatePickerDialog.OnDateSetListener() {
+        startDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -170,7 +192,7 @@ public class CourseDetails extends AppCompatActivity {
                 updateLabelStart();
             }
         };
-        endDate = new DatePickerDialog.OnDateSetListener() {
+        endDatePick = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
@@ -260,5 +282,33 @@ public class CourseDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        repository = new Repository(getApplication());
+        RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
+        recyclerView.setAdapter(assessmentAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Assessment> filteredAssessments = new ArrayList<>();
+        for(Assessment a: repository.getAllAssessments()){
+            if (a.getAssessmentID()== id)
+                filteredAssessments.add(a);
+        }
+        assessmentAdapter.setAssessment(filteredAssessments);
 
+        //Toast.makeText(CourseDetails.this,"refresh list",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        parent.getItemAtPosition(pos);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
