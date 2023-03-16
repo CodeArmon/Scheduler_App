@@ -59,7 +59,6 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
     String instructPhone;
     String instructEmail;
     String note;
-    String email;
     int id;
     int termId;
     int courseID;
@@ -94,7 +93,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         courseID = getIntent().getIntExtra("courseID", -1);
         id = getIntent().getIntExtra("id", -1);
         termId = getIntent().getIntExtra("termID", -1);
-        email = getIntent().getStringExtra("email");
+        instructEmail = getIntent().getStringExtra("email");
         note = getIntent().getStringExtra("note");
         editCourseName.setText(name);
         String format = "MM/dd/yy";
@@ -110,12 +109,12 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
 // Apply the adapter to the spinner
         courseSpinner.setAdapter(adapter);
         //status=courseSpinner.getSelectedItem().toString();
-
+        int position = adapter.getPosition(status);
+        courseSpinner.setSelection(position);
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 status=courseSpinner.getSelectedItem().toString();
-                System.out.println(status);
             }
 
             @Override
@@ -151,7 +150,8 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
 
                 }
                 else{
-                    course=new Course(course.getCourseID(),termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(),editInstructEmail.getText().toString(),editNote.getText().toString());
+                    System.out.println(".......................course ID="+ courseID);
+                    course=new Course(id,termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(),editInstructEmail.getText().toString(),editNote.getText().toString());
                     repository.update(course);
 
                 }

@@ -205,7 +205,7 @@ public class AssessmentDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
         for(Assessment a: repository.getAllAssessments()){
-            if (a.getCourseID()== id)
+            if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
