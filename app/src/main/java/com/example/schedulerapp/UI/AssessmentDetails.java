@@ -46,10 +46,14 @@ public class AssessmentDetails extends AppCompatActivity {
     String endDate;
     String type;
     int id;
+    int assessmentID;
+    int courseID;
     Assessment assessment;
     Repository repository;
     RadioGroup rg;
     RadioButton radioButton;
+    RadioButton obj;
+    RadioButton perf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,24 +62,24 @@ public class AssessmentDetails extends AppCompatActivity {
         editEndDate=findViewById(R.id.enddate);
         editStartDate=findViewById(R.id.startdate);
         name = getIntent().getStringExtra("name");
+        startDate = getIntent().getStringExtra("start date");
         endDate = getIntent().getStringExtra("end date");
+        courseID = getIntent().getIntExtra("id",-1 );
         editName.setText(name);
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        editEndDate.setText(sdf.format(startDate));
-        editStartDate.setText(sdf.format(endDate));
-        id=getIntent().getIntExtra("id", -1);
+        editEndDate.setText(endDate);
+        editStartDate.setText(startDate);
+        id=getIntent().getIntExtra("assessment ID", -1);
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-// get selected radioButton from radioGroup
-        int selectedId = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = findViewById(checkedId);
+                 type = radioButton.getText().toString();
+            }});
 
-// find the radioButton by returned id
-        radioButton = (RadioButton) findViewById(selectedId);
-// radioButton text
-         //type = radioButton.getTag().toString();
-        rg = (RadioGroup) findViewById(R.id.radioGroup);
-        type = ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
         final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
@@ -83,7 +87,7 @@ public class AssessmentDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
         for(Assessment a: repository.getAllAssessments()){
-            if (a.getCourseID()== id)
+            if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
@@ -94,7 +98,6 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(id==-1){
-
                     assessment= new Assessment(0,editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, id);
                     repository.insert(assessment);
 
@@ -218,6 +221,7 @@ public class AssessmentDetails extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
+
             case R.id.notifystart:
                 String startDateFromScreen = editStartDate.getText().toString();
                 String myFormat = "MM/dd/yy"; //In which you need put here
@@ -241,7 +245,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 SimpleDateFormat endsdf = new SimpleDateFormat(endMyFormat, Locale.US);
                 Date endDate = null;
                 try {
-                    myDate = endsdf.parse(endDateFromScreen);
+                    endDate = endsdf.parse(endDateFromScreen);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

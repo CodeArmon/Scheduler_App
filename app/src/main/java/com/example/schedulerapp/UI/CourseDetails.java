@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.schedulerapp.Database.Repository;
 import com.example.schedulerapp.R;
@@ -62,8 +63,10 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
     int id;
     int termId;
     int courseID;
+    int numCourses;
     Term term;
     Course course;
+    Course currentCourse;
     Repository repository;
 
 
@@ -89,6 +92,8 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         courseInstruct = getIntent().getStringExtra("course instructor");
         instructPhone = getIntent().getStringExtra("course phone");
         courseID = getIntent().getIntExtra("courseID", -1);
+        id = getIntent().getIntExtra("id", -1);
+        termId = getIntent().getIntExtra("termID", -1);
         email = getIntent().getStringExtra("email");
         note = getIntent().getStringExtra("note");
         editCourseName.setText(name);
@@ -104,9 +109,20 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         courseSpinner.setAdapter(adapter);
-        status=courseSpinner.getSelectedItem().toString();
+        //status=courseSpinner.getSelectedItem().toString();
 
+        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                status=courseSpinner.getSelectedItem().toString();
+                System.out.println(status);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         //editStatus.setText(status);
         editCourseInstruct.setText(courseInstruct);
         editInstructEmail.setText(instructEmail);
@@ -119,7 +135,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
-        for(Assessment a: repository.getAllAssessments()){
+        for(Assessment a: repository.getAllAssociatedAssessments(courseID)){
             if (a.getAssessmentID()== id)
                 filteredAssessments.add(a);
         }
@@ -279,7 +295,25 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
                 AlarmManager endAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 endAlarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
                 return true;
+            case R.id.deletecourse:
+                for (Course course : repository.getAllCourses()) {
+                    if (course.getCourseID() == id) currentCourse = course;
+                }
+
+                numCourses = 0;
+                for (Course course : repository.getAllCourses()) {
+                    if (course.getCourseID() == id) ++numCourses;
+                }
+
+                if (numCourses == 0) {
+                    repository.delete(currentCourse);
+                    Toast.makeText(CourseDetails.this, currentCourse.getCourseName() + " was deleted", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(CourseDetails.this, "Can't delete Course", Toast.LENGTH_LONG).show();
+                }
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
     @Override
