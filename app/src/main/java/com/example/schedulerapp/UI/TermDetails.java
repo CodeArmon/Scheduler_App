@@ -61,6 +61,10 @@ public class TermDetails extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
         editStartDate.setText(startDate);
         editEndDate.setText(endDate);
+        SimpleDateFormat sdf1 = new SimpleDateFormat(format, Locale.US);
+        editStartDate.setText(sdf1.format(new Date()));
+        //sdf1 = new SimpleDateFormat("dd MMM yyyy");
+        editEndDate.setText(sdf1.format(new Date()));
         id = getIntent().getIntExtra("id", -1);
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.coursesrecyclerview);
@@ -81,11 +85,17 @@ public class TermDetails extends AppCompatActivity {
                 if (id == -1) {
                     term = new Term(0, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
                     repository.insert(term);
+                    //startActivity(new Intent(TermDetails.this, CourseDetails.class));
+                    //finish();
+                    Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                    intent.putExtra("termID",id);
+                    finish();
 
                 } else {
                     term = new Term(id, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
                     repository.update(term);
-
+                    startActivity(new Intent(TermDetails.this, TermList.class));
+                    finish();
                 }
 
 
@@ -98,7 +108,7 @@ public class TermDetails extends AppCompatActivity {
                 Date date;
                 //get value from other screen,but I'm going to hard code it right now
                 String info = editStartDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarStart.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -129,7 +139,7 @@ public class TermDetails extends AppCompatActivity {
                 Date date;
                 //get value from other screen,but I'm going to hard code it right now
                 String info = editEndDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarEnd.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -158,6 +168,7 @@ public class TermDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                intent.putExtra("termID",id);
                 startActivity(intent);
             }
         });
@@ -192,7 +203,6 @@ public class TermDetails extends AppCompatActivity {
         }
         courseAdapter.setCourses(filteredCourses);
 
-        //Toast.makeText(TermDetails.this,"refresh list",Toast.LENGTH_LONG).show();
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.deleteterm, menu);
@@ -214,6 +224,8 @@ public class TermDetails extends AppCompatActivity {
                 if (numCourses == 0) {
                     repository.delete(currentTerm);
                     Toast.makeText(TermDetails.this, currentTerm.getTermName() + " was deleted", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(TermDetails.this, TermList.class));
+                    finish();
                 } else {
                     Toast.makeText(TermDetails.this, "Can't delete a Term with Courses", Toast.LENGTH_LONG).show();
                 }

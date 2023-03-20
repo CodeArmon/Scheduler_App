@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <TextView
         android:id="@+id/textViewassessmentstartdate"
         android:layout_width="100dp"
@@ -27,7 +26,7 @@
         />
     <TextView
         android:id="@+id/textViewassessmentname"
-        android:layout_width="100dp"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="73dp"
         tools:layout_editor_absoluteY="112dp"

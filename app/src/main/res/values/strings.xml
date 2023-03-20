@@ -3,7 +3,9 @@
     <string name="share">Share</string>
     <string name="notify_start">Notify Start</string>
     <string name="notify_end">Notify End</string>
+    <string name="home">Home</string>
     <string name="delete_course">Delete Course</string>
     <string name="channel_name">Scheduler App</string>
     <string name="channel_description">Notifications for Scheduler App</string>
+    <string name="Home">Home</string>
 </resources>

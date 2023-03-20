@@ -20,6 +20,7 @@ import java.util.List;
 
 public class CourseList extends AppCompatActivity {
     private Repository repository;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class CourseList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CourseList.this, CourseDetails.class);
+                intent.putExtra("termID",id);
                 startActivity(intent);
             }
         });

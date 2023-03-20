@@ -37,6 +37,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
                     intent.putExtra("name", current.getAssessmentName());
                     intent.putExtra("start date", current.getStartDate());
                     intent.putExtra("end date", current.getEndDate());
+                    intent.putExtra("type",current.getType());
                     intent.putExtra("assessment id", current.getAssessmentID());
                     context.startActivity(intent);
                 }
@@ -64,10 +65,10 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
             Assessment current =mAssessment.get(position);
             String name=current.getAssessmentName();
             String enddate = current.getEndDate();
-            int assessmentID= current.getAssessmentID();
+            String startdate = current.getStartDate();
             assessmentViewHolder.assessmentItemView.setText(name);
             assessmentViewHolder.assessmentItemView3.setText(enddate);
-           // assessmentViewHolder.assessmentItemView2.setText(assessmentID);
+            assessmentViewHolder.assessmentItemView2.setText(startdate);
         }
         else{
             assessmentViewHolder.assessmentItemView.setText("No Assessment Name");

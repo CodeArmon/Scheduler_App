@@ -16,7 +16,15 @@
             android:name=".UI.MyReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
-
+        <activity
+            android:name=".UI.AssessmentList"
+            android:exported="false"
+            android:label="Assessment List"
+            android:parentActivityName=".UI.AssessmentDetails">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".UI.AssessmentDetails"
             android:exported="false"

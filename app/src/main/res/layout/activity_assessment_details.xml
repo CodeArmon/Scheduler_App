@@ -51,8 +51,8 @@
                     android:id="@+id/startdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="02-01-2023" />
+                    android:inputType="date"
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -69,38 +69,23 @@
                     android:id="@+id/enddate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:hint="02-28-2023" />
+                    android:inputType="date"
+                    />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <RadioGroup
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="55dp"
-                    android:weightSum="1"
-                    android:id="@+id/radioGroup"
-                    android:orientation="horizontal"
-                    >
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="55dp"
-                        android:text="Performance"
-                        android:id="@+id/radioButton"
-                        android:checked="true"
-                        />
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Objective"
-                        android:id="@+id/radioButton2"
-                        android:checked="false"
-                        android:layout_weight="0.15" />
-                </RadioGroup>
+                    android:layout_height="wrap_content"
+                    android:text="Assessment Type" />
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/typeSpinner"
+                    ></Spinner>
 
             </LinearLayout>
 
@@ -135,8 +120,8 @@
         app:layout_constraintTop_toBottomOf="@id/scrollView2"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/assessmentrecyclerview"
-        android:layout_width="186dp"
-        android:layout_height="536dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="194dp" />
 

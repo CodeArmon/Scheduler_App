@@ -62,7 +62,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
     int id;
     int termId;
     int courseID;
-    int numCourses;
+    int numCourses=0;
     Term term;
     Course course;
     Course currentCourse;
@@ -90,8 +90,8 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         status = getIntent().getStringExtra("status");
         courseInstruct = getIntent().getStringExtra("course instructor");
         instructPhone = getIntent().getStringExtra("course phone");
-        courseID = getIntent().getIntExtra("courseID", -1);
-        id = getIntent().getIntExtra("id", -1);
+        courseID = getIntent().getIntExtra("id", -1);
+        //id = getIntent().getIntExtra("id",-1);
         termId = getIntent().getIntExtra("termID", -1);
         instructEmail = getIntent().getStringExtra("email");
         note = getIntent().getStringExtra("note");
@@ -100,6 +100,10 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
         editStartDate.setText(startDate);
         editEndDate.setText(endDate);
+        SimpleDateFormat sdf1 = new SimpleDateFormat(format, Locale.US);
+        editStartDate.setText(sdf1.format(new Date()));
+        //sdf1 = new SimpleDateFormat("dd MMM yyyy");
+        editEndDate.setText(sdf1.format(new Date()));
         //Spinner spinner = (Spinner) findViewById(R.id.statusSpinner);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -127,7 +131,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         editInstructEmail.setText(instructEmail);
         editInstructPhone.setText(instructPhone);
         editNote.setText(note);
-        id=getIntent().getIntExtra("id", -1);
+        //id=getIntent().getIntExtra("id", -1);
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
         final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
@@ -135,25 +139,32 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
         for(Assessment a: repository.getAllAssociatedAssessments(courseID)){
-            if (a.getAssessmentID()== id)
+            if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
-        assessmentAdapter.setAssessment(repository.getAllAssessments());
+        assessmentAdapter.setAssessment(repository.getAllAssociatedAssessments(courseID));
+        System.out.println("filtered assessments "+filteredAssessments);
         Button button=findViewById(R.id.courseSaveButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(id==-1){
+                if(termId==-1){
+                    Toast.makeText(CourseDetails.this,  " User must select a term first", Toast.LENGTH_LONG).show();
+                }
+               else if(courseID==-1){
                    course = new Course(0, termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(), editInstructEmail.getText().toString(),editNote.getText().toString() );
                     repository.insert(course);
-
+                    //startActivity(new Intent(CourseDetails.this, AssessmentDetails.class));
+                    Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
+                    intent.putExtra("id",courseID);
+                    finish();
                 }
                 else{
-                    System.out.println(".......................course ID="+ courseID);
-                    course=new Course(id,termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(),editInstructEmail.getText().toString(),editNote.getText().toString());
+                    course=new Course(courseID,termId, editCourseName.getText().toString(),editStartDate.getText().toString(), editEndDate.getText().toString(),status, editCourseInstruct.getText().toString(), editInstructPhone.getText().toString(),editInstructEmail.getText().toString(),editNote.getText().toString());
                     repository.update(course);
-
+                    startActivity(new Intent(CourseDetails.this, CourseList.class));
+                    finish();
                 }
 
 
@@ -166,7 +177,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
                 Date date;
                 //get value from other screen,but I'm going to hard code it right now
                 String info = editStartDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarStart.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -183,7 +194,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 String info = editEndDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarEnd.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -227,6 +238,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
+                intent.putExtra("id",courseID);
                 startActivity(intent);
             }
         });
@@ -250,8 +262,10 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                startActivity(new Intent(CourseDetails.this, HomeScreen.class));
                 this.finish();
                 return true;
+
             case R.id.share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
@@ -273,7 +287,7 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
                 }
                 Long startTrigger = myDate.getTime();
                 Intent intent = new Intent(CourseDetails.this, MyReceiver.class);
-                intent.putExtra("key", startDateFromScreen + " should trigger start");
+                intent.putExtra("key", startDateFromScreen + " " + name + " course start date");
                 PendingIntent sender = PendingIntent.getBroadcast(CourseDetails.this, ++HomeScreen.alertNum, intent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, startTrigger, sender);
@@ -290,27 +304,10 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
                 }
                 Long endTrigger = endDate.getTime();
                 Intent endIntent = new Intent(CourseDetails.this, MyReceiver.class);
-                endIntent.putExtra("key", endDateFromScreen + " should trigger end");
+                endIntent.putExtra("key", endDateFromScreen + " " + name + " course end date");
                 PendingIntent endSender = PendingIntent.getBroadcast(CourseDetails.this, ++HomeScreen.alertNum, endIntent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager endAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 endAlarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
-                return true;
-            case R.id.deletecourse:
-                for (Course course : repository.getAllCourses()) {
-                    if (course.getCourseID() == id) currentCourse = course;
-                }
-
-                numCourses = 0;
-                for (Course course : repository.getAllCourses()) {
-                    if (course.getCourseID() == id) ++numCourses;
-                }
-
-                if (numCourses == 0) {
-                    repository.delete(currentCourse);
-                    Toast.makeText(CourseDetails.this, currentCourse.getCourseName() + " was deleted", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(CourseDetails.this, "Can't delete Course", Toast.LENGTH_LONG).show();
-                }
                 return true;
         }
 
@@ -325,13 +322,13 @@ public class CourseDetails extends AppCompatActivity implements AdapterView.OnIt
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
-        for(Assessment a: repository.getAllAssessments()){
-            if (a.getAssessmentID()== id)
+        for(Assessment a: repository.getAllAssociatedAssessments(courseID)){
+            if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
-
-        //Toast.makeText(CourseDetails.this,"refresh list",Toast.LENGTH_LONG).show();
+        assessmentAdapter.setAssessment(repository.getAllAssociatedAssessments(courseID));
+        System.out.println("filtered assessments "+filteredAssessments);
     }
 
     @Override

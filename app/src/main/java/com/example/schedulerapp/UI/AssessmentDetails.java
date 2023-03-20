@@ -9,11 +9,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +41,7 @@ public class AssessmentDetails extends AppCompatActivity {
     EditText editName;
     EditText editEndDate;
     EditText editStartDate;
+    EditText editType;
     DatePickerDialog.OnDateSetListener endDatePick;
     DatePickerDialog.OnDateSetListener startDatePick;
     final Calendar myCalendarEnd = Calendar.getInstance();
@@ -52,6 +57,7 @@ public class AssessmentDetails extends AppCompatActivity {
     Repository repository;
     RadioGroup rg;
     RadioButton radioButton;
+    Spinner typeSpinner;
     RadioButton obj;
     RadioButton perf;
     @Override
@@ -61,24 +67,43 @@ public class AssessmentDetails extends AppCompatActivity {
         editName=findViewById(R.id.assessmentname);
         editEndDate=findViewById(R.id.enddate);
         editStartDate=findViewById(R.id.startdate);
+        typeSpinner = findViewById(R.id.typeSpinner);
         name = getIntent().getStringExtra("name");
         startDate = getIntent().getStringExtra("start date");
         endDate = getIntent().getStringExtra("end date");
         courseID = getIntent().getIntExtra("id",-1 );
+        id = getIntent().getIntExtra("assessment id", -1);
+        type = getIntent().getStringExtra("type");
         editName.setText(name);
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
         editEndDate.setText(endDate);
         editStartDate.setText(startDate);
-        id=getIntent().getIntExtra("assessment ID", -1);
-        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        SimpleDateFormat sdf1 = new SimpleDateFormat(format, Locale.US);
+        editEndDate.setText(sdf1.format(new Date()));
+       // sdf1 = new SimpleDateFormat("dd MMM yyyy");
+        editStartDate.setText(sdf1.format(new Date()));
+        //Spinner spinner = (Spinner) findViewById(R.id.statusSpinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.typeChoices, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        typeSpinner.setAdapter(adapter);
+        int position = adapter.getPosition(type);
+        typeSpinner.setSelection(position);
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                type=typeSpinner.getSelectedItem().toString();
+            }
 
-                RadioButton radioButton = findViewById(checkedId);
-                 type = radioButton.getText().toString();
-            }});
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         repository = new Repository(getApplication());
         RecyclerView recyclerView = findViewById(R.id.assessmentrecyclerview);
@@ -86,26 +111,33 @@ public class AssessmentDetails extends AppCompatActivity {
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
-        for(Assessment a: repository.getAllAssessments()){
+        for(Assessment a: repository.getAllAssociatedAssessments(courseID)){
             if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
+        assessmentAdapter.setAssessment(repository.getAllAssociatedAssessments(courseID));
         // AssessmentAdapter.setAssessment(filteredAssessments);
         //AssessmentAdapter.setAssessment(repository.getAllAssessments());
         Button button=findViewById(R.id.assessmentSaveButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(id==-1){
-                    assessment= new Assessment(0,editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, id);
+                if(courseID==-1){
+                    Toast.makeText(AssessmentDetails.this,  " User must select a course first", Toast.LENGTH_LONG).show();
+                }
+               else if(id==-1){
+                    assessment= new Assessment(0,editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, courseID);
                     repository.insert(assessment);
+                    startActivity(new Intent(AssessmentDetails.this, CourseDetails.class));
+                    finish();
 
                 }
                 else{
-                    assessment=new Assessment(id, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, id);
+                    assessment=new Assessment(id, editName.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString(), type, courseID);
                     repository.update(assessment);
-
+                    startActivity(new Intent(AssessmentDetails.this, AssessmentList.class));
+                    finish();
                 }
 
 
@@ -118,7 +150,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 Date date;
                 //get value from other screen,but I'm going to hard code it right now
                 String info = editEndDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarEnd.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -149,7 +181,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 Date date;
                 //get value from other screen,but I'm going to hard code it right now
                 String info = editStartDate.getText().toString();
-                if (info.equals("")) info = "02/10/22";
+                if (info.equals("")) info = "03/18/23";
                 try {
                     myCalendarStart.setTime(sdf.parse(info));
                 } catch (ParseException e) {
@@ -179,6 +211,7 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AssessmentDetails.this, CourseDetails.class);
+                intent.putExtra("id",courseID);
                 startActivity(intent);
             }
         });
@@ -204,13 +237,13 @@ public class AssessmentDetails extends AppCompatActivity {
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
-        for(Assessment a: repository.getAllAssessments()){
+        for(Assessment a: repository.getAllAssociatedAssessments(courseID)){
             if (a.getCourseID()== courseID)
                 filteredAssessments.add(a);
         }
         assessmentAdapter.setAssessment(filteredAssessments);
 
-        //Toast.makeText(AssessmentDetails.this,"refresh list",Toast.LENGTH_LONG).show();
+
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_assessmentdetails, menu);
@@ -218,11 +251,12 @@ public class AssessmentDetails extends AppCompatActivity {
     }
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case R.id.home:
+                startActivity(new Intent(AssessmentDetails.this, HomeScreen.class));
                 this.finish();
                 return true;
 
-            case R.id.notifystart:
+            case R.id.startdateassess:
                 String startDateFromScreen = editStartDate.getText().toString();
                 String myFormat = "MM/dd/yy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -234,12 +268,12 @@ public class AssessmentDetails extends AppCompatActivity {
                 }
                 Long trigger = myDate.getTime();
                 Intent intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                intent.putExtra("key", startDateFromScreen + " should trigger start");
+                intent.putExtra("key", startDateFromScreen + "  "+ name  + " assessment start date");
                 PendingIntent sender = PendingIntent.getBroadcast(AssessmentDetails.this, ++HomeScreen.alertNum, intent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
                 return true;
-            case R.id.notifyend:
+            case R.id.enddateassess:
                 String endDateFromScreen = editEndDate.getText().toString();
                 String endMyFormat = "MM/dd/yy"; //In which you need put here
                 SimpleDateFormat endsdf = new SimpleDateFormat(endMyFormat, Locale.US);
@@ -251,7 +285,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 }
                 Long endTrigger = endDate.getTime();
                 Intent endIntent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                endIntent.putExtra("key1", endDateFromScreen + " should trigger end");
+                endIntent.putExtra("key", endDateFromScreen + "  "+ name + " assessment end date");
                 PendingIntent endSender = PendingIntent.getBroadcast(AssessmentDetails.this, ++HomeScreen.alertNum, endIntent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager endAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 endAlarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
